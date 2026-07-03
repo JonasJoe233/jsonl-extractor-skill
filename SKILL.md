@@ -1,9 +1,9 @@
 ---
 name: jsonl-extractor
 description: |
-  清洗 TeraBox / Oreate 的 Agent 日志，在原表最后新增一列 jsonl，写出交付产物 jsonl 文件的完整可访问 URL。开箱即用：任意 agent 读 SKILL.md 的「执行契约」一节即可跑对，无需读脚本源码。
-  触发词：清洗日志、提取 jsonl、加一列 jsonl、日志转 URL、jsonl 链接、extract jsonl、clean log。
-  确定性触发（直接执行）：用户给一份 TeraBox/Oreate 日志（xlsx/csv）说提取 jsonl / 加 jsonl 列。
+  清洗 TeraBox / Oreate 的 Agent 日志，在原表最后新增一列 jsonl，写出交付产物 jsonl 文件的完整可访问 URL。jsonl 是策略回放用户行为的必要链接——想回放某轮对话、看用户具体做了什么，都要先拿到这条 URL。开箱即用：任意 agent 读 SKILL.md 的「执行契约」一节即可跑对，无需读脚本源码。
+  触发词：清洗日志、提取 jsonl、加一列 jsonl、日志转 URL、jsonl 链接、回放、回放用户行为、看用户行为、复盘这轮对话、extract jsonl、clean log、replay。
+  确定性触发（直接执行）：用户给一份 TeraBox/Oreate 日志（xlsx/csv）说提取 jsonl / 加 jsonl 列 / 想回放用户行为 / 想看用户在某轮做了什么。
   非确定性触发（先问）：给了日志但没说产品——询问："这是 TeraBox 还是 Oreate 的日志？（URL 拼法不同）"
 tags:
   - jsonl-extractor
