@@ -92,7 +92,7 @@ python3 scripts/extract_jsonl.py <日志> -p terabox --column key
 |------|------|
 | `infile` | 输入日志，`.xlsx` 或 `.csv`（位置参数，必填） |
 | `--product` / `-p` | `terabox` 或 `oreate`，**必填**，决定 URL 前缀与下划线规则 |
-| `-o` / `--out` | 输出路径，默认原名加 `_jsonl` 后缀、格式与输入一致 |
+| `-o` / `--out` | 输出路径，默认 `原名_jsonl.xlsx`（CSV 输入也转 xlsx）；写哪种格式看输出后缀，想要 CSV 就 `-o xxx.csv` |
 | `--colname` | 新增列名，默认 `jsonl` |
 | `--column` | `url`（默认，完整可点链接）或 `key`（只要相对路径） |
 
