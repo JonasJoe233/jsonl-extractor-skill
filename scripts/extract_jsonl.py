@@ -142,12 +142,15 @@ def write_csv(rows, out):
 def main():
     ap = argparse.ArgumentParser(description="给 TeraBox/Oreate 日志新增一列 jsonl URL")
     ap.add_argument("infile", help="输入日志 .xlsx 或 .csv")
-    ap.add_argument("--product", "-p", required=True, choices=["terabox", "oreate"],
-                    help="决定 URL 前缀与下划线规则，必填")
-    ap.add_argument("-o", "--out", help="输出路径，默认原名加 _jsonl 后缀，同格式")
+    ap.add_argument("--product", "-p", choices=["terabox", "oreate"],
+                    help="URL 前缀与下划线规则。可省略：默认按日志表头自动识别；"
+                         "若指定且与自动识别冲突，脚本会报错拒绝执行（防拼错前缀导致 404）")
+    ap.add_argument("-o", "--out", help="输出路径，默认原名加 _jsonl 后缀，输出统一 xlsx")
     ap.add_argument("--colname", default="jsonl", help="新增列名，默认 jsonl")
     ap.add_argument("--column", choices=["url", "key"], default="url",
                     help="url=完整可点链接(默认)；key=只要相对路径")
+    ap.add_argument("--force", action="store_true",
+                    help="跳过产品自动识别校验（自动识别与 --product 冲突时仍强制执行，慎用）")
     args = ap.parse_args()
 
     fn = args.infile
@@ -162,6 +165,28 @@ def main():
         sys.exit("空文件")
 
     header = rows[0]
+
+    # ---- 产品识别：以日志表头特征为准，与 --product 交叉校验 ----
+    detected = detect_product(header)
+    if args.column == "url":  # 只有拼 URL 才依赖产品；--column key 与产品无关
+        if args.product and detected and args.product != detected and not args.force:
+            sys.exit(
+                f"❌ 产品不匹配：你指定 --product {args.product}，但日志表头特征识别为 {detected}。\n"
+                f"   两个产品 URL 拼法不同，拼错会导致整列 jsonl 链接 404。\n"
+                f"   请改用 --product {detected}，或去掉 --product 让脚本自动识别；\n"
+                f"   确认无误要强制执行则加 --force。"
+            )
+        product = args.product or detected
+        if not product:
+            sys.exit(
+                "❌ 无法识别日志所属产品（表头不含 TeraBox / Oreate 特征列），\n"
+                "   且未指定 --product。请显式传 --product terabox 或 --product oreate。"
+            )
+        if not args.product and detected:
+            print(f"ℹ️  自动识别产品：{detected}（据日志表头特征）")
+    else:
+        product = args.product or detected or "terabox"  # key 模式产品无关，占位即可
+
     ncol = len(header)
     out_rows = [header + [args.colname]]
     n_hit = 0
@@ -170,7 +195,7 @@ def main():
         key = extract_key(cells)
         if key:
             n_hit += 1
-        val = key if args.column == "key" else to_url(key, args.product)
+        val = key if args.column == "key" else to_url(key, product)
         out_rows.append(cells + [val])
 
     # 默认输出统一为 .xlsx（含 CSV 输入也转 xlsx）；写哪种格式看【输出】后缀，不看输入
@@ -182,7 +207,7 @@ def main():
         write_xlsx(out_rows, out)
 
     total = len(rows) - 1
-    print(f"产品        : {args.product}")
+    print(f"产品        : {product}" + ("（自动识别）" if not args.product else "（手动指定）"))
     print(f"总数据行    : {total:,}")
     if total:
         print(f"提取到 jsonl: {n_hit:,}（{n_hit/total*100:.1f}%）")
