@@ -59,7 +59,7 @@ python3 scripts/extract_jsonl.py <日志文件> --product <terabox|oreate>
 2. 命中率 X% 合理：TeraBox 全量日志约 **99%+**；含大量 user 行/抽样文件会偏低，属正常。**若 X% = 0**，多半是产品选错或文件不是 Agent 日志——报告用户、不要交付。
 3. 输出文件存在，列数 = 原列数 + 1，末列名为 `jsonl`。
 
-**产物**：默认原名加 `_jsonl` 后缀、同格式（`日志.xlsx` → `日志_jsonl.xlsx`），只在末尾多一列，其余列不动。
+**产物**：默认输出统一为 `.xlsx`（`日志.xlsx` → `日志_jsonl.xlsx`；**CSV 输入也转成 xlsx**：`日志.csv` → `日志_jsonl.xlsx`）。只在末尾多一列，其余列不动。想要 CSV 输出则显式 `-o xxx.csv`——写哪种格式看输出后缀，不看输入。
 
 ## 触发条件
 
