@@ -155,11 +155,13 @@ def main():
         val = key if args.column == "key" else to_url(key, args.product)
         out_rows.append(cells + [val])
 
-    out = args.out or f"{os.path.splitext(fn)[0]}_jsonl{ext}"
-    if ext == ".xlsx":
-        write_xlsx(out_rows, out)
-    else:
+    # 默认输出统一为 .xlsx（含 CSV 输入也转 xlsx）；写哪种格式看【输出】后缀，不看输入
+    out = args.out or f"{os.path.splitext(fn)[0]}_jsonl.xlsx"
+    out_ext = os.path.splitext(out)[1].lower()
+    if out_ext == ".csv":
         write_csv(out_rows, out)
+    else:
+        write_xlsx(out_rows, out)
 
     total = len(rows) - 1
     print(f"产品        : {args.product}")

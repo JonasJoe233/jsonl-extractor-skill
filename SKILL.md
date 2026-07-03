@@ -18,6 +18,7 @@ tags:
 | [[jsonl-extractor/README]] | 面向**人**的速查（非 agent 的同学手动跑）。**Agent 忽略此文件**，一切以 SKILL.md 为准 |
 | [[jsonl-extractor/meta]] | 关联声明（topics/product_scope/data），供 `_discover.py` 计算关联 |
 | [[jsonl-extractor/wiki]] | 执行索引与跨次沉淀 |
+| [[jsonl-extractor/scripts/extract_jsonl]] | (待补充用途说明) |
 
 ---
 
