@@ -12,7 +12,7 @@ python3 scripts/extract_jsonl.py 你的日志.xlsx --product terabox
 python3 scripts/extract_jsonl.py 你的日志.csv --product oreate
 ```
 
-跑完在原文件同目录生成 `你的日志_jsonl.xlsx`（或 `.csv`），末列就是链接，直接点开。
+跑完在原文件同目录生成 `你的日志_jsonl.xlsx`，末列就是链接，直接点开。**CSV 输入也默认转成 xlsx**；想要 CSV 输出就显式 `-o xxx.csv`。
 
 ## 参数
 
