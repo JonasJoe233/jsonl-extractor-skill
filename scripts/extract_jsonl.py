@@ -54,6 +54,24 @@ def to_url(key, product):
         return OREATE_PREFIX + key
     return TERABOX_PREFIX + key  # TeraBox：原样拼，下划线保留
 
+# ---------- 产品识别（防拼错前缀导致 404）----------
+# 靠表头特征列区分两个产品的 schema，与用户传入的 --product 交叉校验。
+# TeraBox：agent_daily_report / agent_report 标准 39 列（英文列名）
+TERABOX_SIG = {"role_name", "success_skill_info", "fail_skill_info", "encoded_chat_id",
+               "message_detail_info", "create_time_str", "client_platform"}
+# Oreate：对话日志 CSV（含中文列 + messageData）
+OREATE_SIG = {"messagedata", "query内容", "消息类型", "回复内容", "聊天时间", "query字数"}
+
+def detect_product(header):
+    """按表头特征列判断日志属于哪个产品。返回 'terabox' / 'oreate' / None（无法判定）。"""
+    cols = {str(h).strip().lower() for h in header}
+    tb = len(cols & {c.lower() for c in TERABOX_SIG})
+    orr = len(cols & {c.lower() for c in OREATE_SIG})
+    if tb == 0 and orr == 0:
+        return None
+    return "terabox" if tb >= orr else "oreate"
+
+
 # ---------- 读 xlsx（直解 XML，绕过导出工具的 <dimension ref="A1"> bug）----------
 def read_xlsx(fn):
     z = zipfile.ZipFile(fn)
