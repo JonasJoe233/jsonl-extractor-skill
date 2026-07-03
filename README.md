@@ -20,7 +20,7 @@ python3 scripts/extract_jsonl.py 你的日志.csv --product oreate
 |------|:----:|------|
 | `infile` | ✅ | 输入日志，`.xlsx` 或 `.csv` |
 | `--product` / `-p` | ✅ | `terabox` 或 `oreate`。**必填，两个产品 URL 拼法不同，选错会 404** |
-| `-o` / `--out` | | 输出路径，默认原名加 `_jsonl` 后缀 |
+| `-o` / `--out` | | 输出路径，默认 `原名_jsonl.xlsx`（CSV 输入也转 xlsx）；要 CSV 输出就 `-o xxx.csv` |
 | `--colname` | | 新列名，默认 `jsonl` |
 | `--column` | | `url`（默认，完整链接）/ `key`（只要相对路径） |
 
