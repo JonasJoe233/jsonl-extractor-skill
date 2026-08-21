@@ -2,6 +2,8 @@
 
 给一份 **TeraBox / Oreate 的 Agent 日志**，在原表最后加一列 `jsonl`，填每行交付产物 jsonl 文件的**完整可点 URL**。其余列一字不动。
 
+> 这份 README 只讲上面这件事（L1）。**想挖 jsonl 里面的执行轨迹**（按工具名圈回合、解析成 NDJSON、看基线量级）看 `SKILL.md` 的 L2 一节和 `baseline/README.md`。
+
 ## 一行命令
 
 ```bash
