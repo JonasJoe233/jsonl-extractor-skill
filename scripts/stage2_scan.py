@@ -110,6 +110,26 @@ if __name__ == "__main__":
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--proxy", default=os.environ.get("https_proxy", ""))
     a = ap.parse_args()
+    tools = [t.strip() for t in a.tools.split(",") if t.strip()]
+    if not tools:
+        raise SystemExit("[fatal] --tools 不能为空")
+
+    # 续跑只按 url 去重，不认工具；换了 --tools 沿用旧 results 会静默空转、
+    # 新工具命中全 0 且看着像成功。用 sidecar 记指纹，不一致直接拦住。
+    fp_path = a.out + ".tools"
+    if os.path.exists(fp_path):
+        prev = [t for t in open(fp_path).read().split() if t]
+        if sorted(prev) != sorted(tools):
+            raise SystemExit(
+                f"[fatal] {os.path.basename(a.out)} 是用 --tools {','.join(prev)} 扫的，"
+                f"本次是 {','.join(tools)}。\n"
+                f"        续跑只按 url 去重，沿用会静默空转、新工具命中全为 0。\n"
+                f"        换个输出文件名（如 results_{tools[0]}.tsv），"
+                f"或把 --tools 补成 {','.join(sorted(set(prev) | set(tools)))} 并同时换文件名重扫。")
+    elif os.path.exists(a.out):
+        print(f"[warn] {os.path.basename(a.out)} 无 .tools 指纹，无法校验工具是否一致；"
+              f"若上次扫的不是 {','.join(tools)}，请换文件名重扫", file=sys.stderr)
+
     urls = [l.strip() for l in open(a.urls) if l.strip()]
     total = len(urls)
     if os.path.exists(a.out):
@@ -118,7 +138,8 @@ if __name__ == "__main__":
         print(f"[resume] 全量 {total}，已完成 {total-len(urls)}，剩余 {len(urls)}", file=sys.stderr)
     if a.limit:
         urls = urls[:a.limit]
-    tools = [t.strip() for t in a.tools.split(",") if t.strip()]
+    with open(fp_path, "w") as fo:
+        fo.write("\n".join(tools) + "\n")
     print(f"[scan] {len(urls)} urls, {a.workers} workers, tools={tools}", file=sys.stderr)
     sc = Scanner(a.out, a.workers, tools, a.proxy)
     sc.run(urls, a.deadline)
