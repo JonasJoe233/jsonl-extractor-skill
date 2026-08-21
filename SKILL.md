@@ -80,7 +80,7 @@ python3 scripts/stage3_extract.py --index <工作目录> --results <工作目录
 
 `--tool` 选哪些回合抓（任一命中即抓），`--keep` 选哪些工具展开成结构化明细，其余工具只在 `tool_calls` 里留调用次数。web_search_tool 和 web_fetch_tool 有专门的解析分支（搜索出 query/gl/hl/results[]，抓取出 target/args/out_len）；别的工具走通用分支，落在 `calls[]` 里带 args、meta、输出头部 800 字符。
 
-**⚠ 换工具必须换 results.tsv 文件名。** stage2 的续跑靠「url 是否已在 results.tsv 出现」判断，不看当初扫的是哪些工具。所以同一个 results.tsv 换 `--tools` 再跑，会打印 `[resume] 剩余 0` 直接空转退出——看着像成功，实际一条没扫，新工具的命中全是 0。要扫新工具就写新文件：`results_ppt.tsv`、`results_memory.tsv`。一次把要扫的工具都列进 `--tools` 最省事，字节匹配加几个关键词几乎不增加耗时。
+**⚠ 换工具必须换 results.tsv 文件名。** stage2 的续跑靠「url 是否已在 results.tsv 出现」判断，不看当初扫的是哪些工具。同一个 results.tsv 换 `--tools` 再跑，本来会打印 `[resume] 剩余 0` 直接空转退出——看着像成功，实际一条没扫、新工具命中全是 0。现在脚本会在 `results.tsv.tools` 里记下当次工具集，不一致直接 `[fatal]` 拦住并提示改用新文件名（旧的无指纹文件只给 `[warn]`，仍需自己判断）。一次把要扫的工具都列进 `--tools` 最省事，字节匹配加几个关键词几乎不增加耗时。
 
 ### 铁律：全字段保留，一行自证
 
