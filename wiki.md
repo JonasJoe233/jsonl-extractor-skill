@@ -16,4 +16,5 @@
 - L2 的铁律是全字段保留：回溯常要看 vip_type 这类身份信息，jsonl 层已经没有这些字段，裁掉就得回去重新 join。加字段改 `stage1_index.py` 的 `COLS`，不在后续阶段做投影。
 - 工具名从 `baseline/README.md` 的 16 个清单里挑，不要猜拼写。**日志里没有叫 deep research 的 plugin**，`source_name` 只有 `htmlPPT` 和空值两种——要圈 deep research 的回合得先定识别口径。
 - 沙箱单次 bash 有墙钟上限、后台进程会被杀，stage2/stage3 必须靠 `--deadline` 分批续跑，不要写 nohup。企业代理是 MITM 证书，`verify=False` 是必须的。
+- stage2 续跑只按 url 去重，**换 `--tools` 沿用旧 results.tsv 会静默空转**（`[resume] 剩余 0`，新工具命中全 0，看着像成功）。已加 `results.tsv.tools` 指纹守卫拦住这种情况，旧的无指纹文件只 warn，仍需自己判断。
 - `~/.claude/skills` 是受保护路径：从 Downloads 拷文件进来会 `Operation not permitted`，需关沙箱执行，且 `cp -R` 会因扩展属性/`.cc-writes` 失败，改用 `cp -X` 逐文件拷。
