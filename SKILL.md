@@ -21,7 +21,6 @@ tags:
 | [[jsonl-extractor/wiki]] | 执行索引与跨次沉淀 |
 | `SKILL.md.bak` | 升级前的 L1-only 版本备份，新版验证无误后可删 |
 | `raw/` | 批处理留痕（工具型 skill 通常为空） |
-| [[jsonl-extractor/scripts/stage2_scan]] | (待补充用途说明) |
 
 ---
 
